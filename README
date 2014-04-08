@@ -1,0 +1,34 @@
+File descriptions:
+
+	ARMv7a-ICS-Android.SMP.Asimbench.tar.gz:
+		A disk image contains the Android ICS operating system and .apk files for applications in AsimBench.
+
+	sdcard-1g.tar.gz:
+		A disk image contains the data for applications in AsimBench, which used to simulate the SDcard for mobile devices.
+
+		This disk image is also required to be mounted in gem5.
+
+		For example: (config/common/FSConfig.py)
+
+			def make ArmSystem(...)
+				...
+				self.cf0 = CowIdeDisk(driveID='master')
+				self.cf2 = CowIdeDisk(driveID='master')
+				self.cf0.childImage(mdesc.disk())
+				self.cf2.childImage(disk("sdcard-1g.img"))
+				# default to an IDE controller rather than a CF one
+				# assuming we've got one
+
+				try:
+					self.realview.ide.disks = [self.cf0, self.cf2]
+					#self.realview.ide.disks = [self.cf0]
+				except:
+					self.realview.cf_ctrl.disks = [self.cf0, self.cf2]
+					#self.realview.cf_ctrl.disks = [self.cf0]
+				...
+
+	asimbench_boot_scripts:
+		The files contained in this directory are the execution scripts of running the applications in AsimBench.
+
+	asimbench_android_arm_kernel:
+		Android/ARM kernel for AsimBench. The screen size of the simulated mobile device is specified in the kernel, that is 800 x 480.
